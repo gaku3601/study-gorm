@@ -1,0 +1,7 @@
+development:
+  driver: postgres
+  open: user=postgres dbname=app host=localhost port=5432 sslmode=disable
+
+staging:
+  driver: postgres
+  open: user=postgres dbname=app host=db port=5432 sslmode=disable

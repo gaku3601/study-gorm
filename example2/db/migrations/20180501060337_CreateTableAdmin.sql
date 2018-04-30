@@ -13,7 +13,7 @@ CREATE TABLE Careers (
   fromdate  date,
   todate    date,
   description text,
-  admin_id integer REFERENCES admins (id) on update cascade on delete cascade -- 関連idは単数形で作成する必要あり ×admins_id ○admin_id
+  admin_id integer REFERENCES admins (id) on update cascade on delete cascade
 );
 
 
