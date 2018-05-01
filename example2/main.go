@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -14,35 +13,51 @@ func main() {
 	defer db.Close()
 
 	// create
-	admin := Admin{
+	admin := &Admin{
 		Name:  "gaku",
 		Age:   26,
 		Isman: true,
-		Careers: []Career{
+		Careers: []*Career{
 			{
-				Fromdate:    time.Date(2012, 4, 1, 23, 59, 59, 0, time.Local),
-				Todate:      time.Date(2014, 3, 15, 23, 59, 59, 0, time.Local),
+				Fromdate:    time.Date(2012, 4, 1, 0, 0, 0, 0, time.Local),
+				Todate:      time.Date(2014, 3, 15, 0, 0, 0, 0, time.Local),
 				Description: "大学生活最高！",
 			},
 			{
-				Fromdate:    time.Date(2014, 4, 1, 23, 59, 59, 0, time.Local),
-				Todate:      time.Date(2016, 8, 20, 23, 59, 59, 0, time.Local),
+				Fromdate:    time.Date(2014, 4, 1, 0, 0, 0, 0, time.Local),
+				Todate:      time.Date(2016, 8, 20, 0, 0, 0, 0, time.Local),
 				Description: "しゃちく生活万歳！",
 			},
 			{
-				Fromdate:    time.Date(2016, 9, 1, 23, 59, 59, 0, time.Local),
-				Todate:      time.Date(2017, 5, 7, 23, 59, 59, 0, time.Local),
+				Fromdate:    time.Date(2016, 9, 1, 0, 0, 0, 0, time.Local),
+				Todate:      time.Date(2017, 5, 7, 0, 0, 0, 0, time.Local),
 				Description: "ニート生活最高ぅううううううあsぢうふぁすdfh(｀・ω・´)！",
 			},
 			{
-				Fromdate:    time.Date(2017, 5, 8, 23, 59, 59, 0, time.Local),
+				Fromdate:    time.Date(2017, 5, 8, 0, 0, 0, 0, time.Local),
 				Description: "不動産屋さん！しゃちく万歳！万歳！",
 			},
 		},
 	}
-	fmt.Printf("%#v\n", admin)
-	db.Create(&admin)
-	db.Save(&admin)
+	db.Create(admin)
+
+	// fetch
+	var myAdmin Admin
+	db.First(&myAdmin, 1)
+	var careers []*Career
+	db.Model(&myAdmin).Related(&careers)
+
+	// update
+	myAdmin.Name = "updateName"
+	db.Save(&myAdmin)
+	var updateCareer Career
+	db.First(&updateCareer, 1)
+	updateCareer.Description = "update description!"
+	db.Save(&updateCareer)
+
+	// delete 以下で関連も削除される
+	var deleteAdmin Admin
+	db.Delete(&deleteAdmin, 1)
 }
 
 // テーブル名:adminsに対して、Admin or Adminsどちらの構造体名でもOK
@@ -52,7 +67,7 @@ type Admin struct {
 	Name    string
 	Age     int
 	Isman   bool
-	Careers []Career
+	Careers []*Career
 }
 
 // 管理者経歴テーブル
