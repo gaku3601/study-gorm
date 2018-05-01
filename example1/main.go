@@ -35,15 +35,15 @@ func main() {
 	fmt.Println("----------------------")
 
 	// update
-	admin := &Admin{}
-	db.First(&admin, 3) // where id = 3と同じ
+	var admin Admin
+	db.First(&admin, 1) // where id = 3と同じ
 
-	admin.Name = "gakukokokokokokokaaaaaaaa"
+	admin.Name = "gakkaaaaaaaa"
 	db.Save(&admin) // 更新対象が存在しない場合、SAVEは新規作成を実施する
 
 	// where delete
 	db.Where("name Like ?", "%ko%").Delete(&Admin{})
-	db.Delete(&Admin{}, 5) // where id = 2
+	db.Delete(&admin, 5) // where id = 2
 	//db.Delete(&Admin{})    // all delete
 
 	// 最後に全てをfetchし確認
